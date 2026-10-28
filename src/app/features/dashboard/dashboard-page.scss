@@ -37,18 +37,9 @@
 }
 
 .icon {
-  display: inline-flex;
   flex: none;
-  align-items: center;
-  justify-content: center;
-  width: 12px;
-  height: 39px;
-}
-
-.icon img {
-  width: 12px;
-  height: 12px;
-  object-fit: contain;
+  font-size: 14px;
+  line-height: 1;
 }
 
 .value {
@@ -79,6 +70,34 @@
 
 .note.negative {
   color: #c23f38;
+}
+
+.skeleton {
+  min-height: 151px;
+  background: #f3f4f6;
+}
+
+.status,
+.status p {
+  margin: 0;
+  color: #212121;
+  font-family: Inter, Tahoma, sans-serif;
+  font-size: 14px;
+  line-height: 22px;
+}
+
+.retry {
+  margin-top: 12px;
+  padding: 8px 16px;
+  border: 0;
+  border-radius: 4px;
+  background: var(--mat-sys-primary);
+  color: #fff;
+  font-family: Inter, Tahoma, sans-serif;
+  font-size: 12.9px;
+  font-weight: 500;
+  line-height: 100%;
+  cursor: pointer;
 }
 
 @media (max-width: 64rem) {

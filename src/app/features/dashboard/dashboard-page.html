@@ -1,20 +1,34 @@
-<section class="cards" [attr.aria-label]="i18n.t('stats.region')">
-  @for (card of cards; track card.id) {
-    <article class="card">
-      <div class="title">
-        <span class="icon">
-          <img [src]="card.iconSrc" alt="" width="12" height="12" />
-        </span>
-        <h2>{{ i18n.t(card.labelKey) }}</h2>
-      </div>
-      <p class="value">{{ card.value }}</p>
-      <p
-        class="note"
-        [class.positive]="card.tone === 'positive'"
-        [class.negative]="card.tone === 'negative'"
-      >
-        {{ i18n.t(card.noteKey) }}
-      </p>
-    </article>
-  }
-</section>
+@if (loading()) {
+  <section class="cards" aria-busy="true" [attr.aria-label]="i18n.t('stats.region')">
+    <p class="visually-hidden">{{ i18n.t('stats.loading') }}</p>
+    @for (placeholder of placeholders; track placeholder) {
+      <article class="card skeleton"></article>
+    }
+  </section>
+} @else if (failed()) {
+  <div class="status">
+    <p role="alert">{{ i18n.t('stats.error') }}</p>
+    <button type="button" class="retry" (click)="retry()">{{ i18n.t('stats.retry') }}</button>
+  </div>
+} @else if (empty()) {
+  <p class="status">{{ i18n.t('stats.empty') }}</p>
+} @else {
+  <section class="cards" [attr.aria-label]="i18n.t('stats.region')">
+    @for (card of cards(); track card.id) {
+      <article class="card">
+        <div class="title">
+          <span class="icon" aria-hidden="true">{{ card.icon }}</span>
+          <h2>{{ i18n.t('stats.' + card.id + '.title') }}</h2>
+        </div>
+        <p class="value">{{ card.value }}</p>
+        <p
+          class="note"
+          [class.positive]="card.tone === 'positive'"
+          [class.negative]="card.tone === 'negative'"
+        >
+          {{ i18n.t('stats.' + card.id + '.note') }}
+        </p>
+      </article>
+    }
+  </section>
+}

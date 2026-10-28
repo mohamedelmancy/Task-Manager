@@ -16,8 +16,13 @@ export const cacheGetInterceptor: HttpInterceptorFn = (request, next) => {
   return next(request).pipe(tap((event) => storeResponse(request, event)));
 };
 
-export function clearGetCache(): void {
-  responses.clear();
+export function clearGetCache(url?: string): void {
+  if (!url) {
+    responses.clear();
+    return;
+  }
+
+  responses.delete(url);
 }
 
 function storeResponse(request: HttpRequest<unknown>, event: HttpEvent<unknown>): void {
