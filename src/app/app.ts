@@ -1,3 +1,4 @@
+import { DOCUMENT } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 
@@ -14,9 +15,14 @@ import { NavIcon } from './shared/ui/nav-icon/nav-icon';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class App {
+  private readonly document = inject(DOCUMENT);
   protected readonly i18n = inject(I18nService);
   protected readonly navItems = NAV_ITEMS;
   protected readonly menuOpen = signal(false);
+
+  constructor() {
+    this.document.body.classList.add('use-inter');
+  }
 
   protected toggleMenu(): void {
     this.menuOpen.update((open) => !open);

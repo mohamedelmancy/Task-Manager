@@ -17,5 +17,14 @@
   "nav.analytics": "Analytics",
   "nav.team": "Team",
   "nav.settings": "Settings",
-  "nav.newTask": "+ New Task"
+  "nav.newTask": "+ New Task",
+  "stats.region": "Statistics",
+  "stats.total": "Total Tasks",
+  "stats.totalNote": "+12 this week",
+  "stats.completed": "Completed",
+  "stats.completedNote": "+8 today",
+  "stats.inProgress": "In Progress",
+  "stats.inProgressNote": "Same as yesterday",
+  "stats.overdue": "Overdue",
+  "stats.overdueNote": "+3 today"
 }

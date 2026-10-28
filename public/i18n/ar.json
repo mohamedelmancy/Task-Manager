@@ -17,5 +17,14 @@
   "nav.analytics": "التحليلات",
   "nav.team": "الفريق",
   "nav.settings": "الإعدادات",
-  "nav.newTask": "+ مهمة جديدة"
+  "nav.newTask": "+ مهمة جديدة",
+  "stats.region": "الإحصائيات",
+  "stats.total": "إجمالي المهام",
+  "stats.totalNote": "+12 هذا الأسبوع",
+  "stats.completed": "مكتملة",
+  "stats.completedNote": "+8 اليوم",
+  "stats.inProgress": "قيد التنفيذ",
+  "stats.inProgressNote": "نفس الأمس",
+  "stats.overdue": "متأخرة",
+  "stats.overdueNote": "+3 اليوم"
 }

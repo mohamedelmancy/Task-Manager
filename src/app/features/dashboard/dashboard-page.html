@@ -1,0 +1,20 @@
+<section class="cards" [attr.aria-label]="i18n.t('stats.region')">
+  @for (card of cards; track card.id) {
+    <article class="card">
+      <div class="title">
+        <span class="icon">
+          <img [src]="card.iconSrc" alt="" width="12" height="12" />
+        </span>
+        <h2>{{ i18n.t(card.labelKey) }}</h2>
+      </div>
+      <p class="value">{{ card.value }}</p>
+      <p
+        class="note"
+        [class.positive]="card.tone === 'positive'"
+        [class.negative]="card.tone === 'negative'"
+      >
+        {{ i18n.t(card.noteKey) }}
+      </p>
+    </article>
+  }
+</section>

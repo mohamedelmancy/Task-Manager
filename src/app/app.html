@@ -17,19 +17,44 @@
 
     <a class="brand" routerLink="/dashboard" (click)="closeMenu()">
       <span class="logo">
-        <img src="icons/logo.svg" alt="" width="9" height="9" />
+        <img
+          src="icons/logo.svg"
+          alt=""
+          width="9"
+          height="9"
+          decoding="async"
+          fetchpriority="low"
+        />
       </span>
       <h1>{{ i18n.t('app.title') }}</h1>
     </a>
 
     <label class="search">
       <span class="visually-hidden">{{ i18n.t('header.search') }}</span>
-      <input type="search" [placeholder]="'🔍 ' + i18n.t('header.search')" />
+      <svg class="search-icon" viewBox="0 0 16 16" aria-hidden="true">
+        <circle cx="6.5" cy="6.5" r="4" fill="none" stroke="currentColor" stroke-width="1.5" />
+        <path
+          d="M9.6 9.6 13 13"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linecap="round"
+        />
+      </svg>
+      <input type="search" [placeholder]="i18n.t('header.search')" />
     </label>
 
     <div class="header-actions">
       <button type="button" class="icon-button" [attr.aria-label]="i18n.t('header.notifications')">
-        <img class="header-icon" src="icons/notifications.svg" alt="" width="24" height="24" />
+        <img
+          class="header-icon"
+          src="icons/notifications.svg"
+          alt=""
+          width="24"
+          height="24"
+          decoding="async"
+          fetchpriority="low"
+        />
       </button>
       <app-account-menu />
     </div>

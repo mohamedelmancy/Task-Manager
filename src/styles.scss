@@ -16,6 +16,14 @@
   src: url('/fonts/inter-medium.woff2') format('woff2');
 }
 
+@font-face {
+  font-family: Inter;
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/inter-bold.woff2') format('woff2');
+}
+
 html {
   @include mat.theme(
     (
@@ -48,12 +56,20 @@ body {
   background-color: var(--mat-sys-surface);
   color: var(--mat-sys-on-surface);
   font: var(--mat-sys-body-medium);
-  font-family: Inter, Tahoma, sans-serif;
+  font-family: Tahoma, sans-serif;
   font-weight: 400;
   margin: 0;
 }
 
 html[dir='rtl'] body {
+  font-family: Tahoma, 'Segoe UI', sans-serif;
+}
+
+body.use-inter {
+  font-family: Inter, Tahoma, sans-serif;
+}
+
+html[dir='rtl'] body.use-inter {
   font-family: Tahoma, 'Segoe UI', sans-serif;
 }
 
