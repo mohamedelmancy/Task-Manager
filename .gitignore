@@ -17,6 +17,7 @@
 
 # Node
 /node_modules/
+/tools/node_modules/
 /package-lock.json
 /yarn.lock
 

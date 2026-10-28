@@ -1,0 +1,21 @@
+{
+  "app.title": "مدير المهام",
+  "a11y.skip": "تخطي إلى المحتوى",
+  "a11y.sidebar": "القائمة الجانبية",
+  "language.label": "اللغة",
+  "account.menu": "قائمة الحساب",
+  "account.logout": "تسجيل الخروج",
+  "language.loading": "جار تحميل اللغات",
+  "language.error": "تعذر تحميل الترجمات.",
+  "language.retry": "حاول مرة أخرى",
+  "header.search": "بحث عن المهام...",
+  "header.notifications": "الإشعارات",
+  "header.menu": "فتح القائمة",
+  "nav.dashboard": "لوحة التحكم",
+  "nav.tasks": "المهام",
+  "nav.calendar": "التقويم",
+  "nav.analytics": "التحليلات",
+  "nav.team": "الفريق",
+  "nav.settings": "الإعدادات",
+  "nav.newTask": "+ مهمة جديدة"
+}

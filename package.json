@@ -8,10 +8,12 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "test:ci": "ng test --configuration ci",
+    "lighthouse": "node scripts/lighthouse.mjs",
     "lint": "ng lint",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "prepare": "husky"
+    "prepare": "husky",
+    "postinstall": "npm install --prefix tools"
   },
   "lint-staged": {
     "*.{ts,html}": [

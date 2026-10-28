@@ -1,0 +1,4 @@
+[
+  { "id": "en", "label": "English", "direction": "ltr" },
+  { "id": "ar", "label": "العربية", "direction": "rtl" }
+]

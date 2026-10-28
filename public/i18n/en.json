@@ -1,0 +1,21 @@
+{
+  "app.title": "Task Manager",
+  "a11y.skip": "Skip to content",
+  "a11y.sidebar": "Sidebar",
+  "language.label": "Language",
+  "account.menu": "Account menu",
+  "account.logout": "Log out",
+  "language.loading": "Loading languages",
+  "language.error": "Translations could not be loaded.",
+  "language.retry": "Try again",
+  "header.search": "Search tasks...",
+  "header.notifications": "Notifications",
+  "header.menu": "Open menu",
+  "nav.dashboard": "Dashboard",
+  "nav.tasks": "Tasks",
+  "nav.calendar": "Calendar",
+  "nav.analytics": "Analytics",
+  "nav.team": "Team",
+  "nav.settings": "Settings",
+  "nav.newTask": "+ New Task"
+}

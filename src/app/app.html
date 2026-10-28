@@ -1,0 +1,65 @@
+<div class="shell">
+  <a class="skip-link" href="#content">{{ i18n.t('a11y.skip') }}</a>
+
+  <header class="header">
+    <button
+      type="button"
+      class="menu-button"
+      [attr.aria-expanded]="menuOpen()"
+      [attr.aria-controls]="'sidebar'"
+      [attr.aria-label]="i18n.t('header.menu')"
+      (click)="toggleMenu()"
+    >
+      <svg class="header-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <path fill="currentColor" d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z" />
+      </svg>
+    </button>
+
+    <a class="brand" routerLink="/dashboard" (click)="closeMenu()">
+      <span class="logo">
+        <img src="icons/logo.svg" alt="" width="9" height="9" />
+      </span>
+      <h1>{{ i18n.t('app.title') }}</h1>
+    </a>
+
+    <label class="search">
+      <span class="visually-hidden">{{ i18n.t('header.search') }}</span>
+      <input type="search" [placeholder]="'🔍 ' + i18n.t('header.search')" />
+    </label>
+
+    <div class="header-actions">
+      <button type="button" class="icon-button" [attr.aria-label]="i18n.t('header.notifications')">
+        <img class="header-icon" src="icons/notifications.svg" alt="" width="24" height="24" />
+      </button>
+      <app-account-menu />
+    </div>
+  </header>
+
+  <aside
+    id="sidebar"
+    class="sidebar"
+    [class.sidebar-open]="menuOpen()"
+    [attr.aria-label]="i18n.t('a11y.sidebar')"
+  >
+    <nav class="nav" [attr.aria-label]="i18n.t('app.title')">
+      @for (item of navItems; track item.path) {
+        <a
+          class="sidenav-item"
+          [routerLink]="item.path"
+          routerLinkActive="is-active"
+          ariaCurrentWhenActive="page"
+          (click)="closeMenu()"
+        >
+          <app-nav-icon [name]="item.icon" />
+          {{ i18n.t(item.labelKey) }}
+        </a>
+      }
+    </nav>
+
+    <button type="button" class="new-task">{{ i18n.t('nav.newTask') }}</button>
+  </aside>
+
+  <main id="content" class="content" tabindex="-1">
+    <router-outlet />
+  </main>
+</div>

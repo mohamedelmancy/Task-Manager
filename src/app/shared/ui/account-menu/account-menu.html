@@ -1,0 +1,43 @@
+<button
+  #trigger
+  type="button"
+  class="avatar"
+  [attr.aria-expanded]="menuOpen()"
+  aria-haspopup="true"
+  [attr.aria-controls]="menuOpen() ? 'account-menu' : null"
+  [attr.aria-label]="i18n.t('account.menu')"
+  (click)="toggleMenu()"
+>
+  JD
+</button>
+
+@if (menuOpen()) {
+  <div id="account-menu" class="account-menu">
+    <div class="menu-row">
+      <span>{{ i18n.t('language.label') }}</span>
+      <span class="choices">
+        @for (language of i18n.languages(); track language.id; let last = $last) {
+          <button
+            type="button"
+            class="choice"
+            [class.is-active]="language.id === i18n.languageId()"
+            [attr.aria-pressed]="language.id === i18n.languageId()"
+            (click)="chooseLanguage(language.id)"
+          >
+            {{ language.id }}
+          </button>
+          @if (!last) {
+            <span class="divider" aria-hidden="true">|</span>
+          }
+        }
+      </span>
+    </div>
+    <button type="button" class="menu-item">{{ i18n.t('account.logout') }}</button>
+    @if (i18n.loadError()) {
+      <p class="error" role="alert">{{ i18n.t('language.error') }}</p>
+      <button type="button" class="menu-item" (click)="i18n.reload()">
+        {{ i18n.t('language.retry') }}
+      </button>
+    }
+  </div>
+}
