@@ -4,7 +4,7 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { cacheGetInterceptor, clearGetCache } from '../http/cache-get.interceptor';
-import { TaskApi } from './task-api';
+import { Apis } from './apis';
 
 const statisticsFile = {
   statistics: [
@@ -52,7 +52,7 @@ const tasksFile = {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class Host {
-  readonly api = inject(TaskApi);
+  readonly api = inject(Apis);
 }
 
 describe('TaskApi', () => {
@@ -114,5 +114,68 @@ describe('TaskApi', () => {
     fixture.detectChanges();
 
     expect(fixture.componentInstance.api.statistics()[0]?.value).toBe(156);
+  });
+
+  it('hides a task after it is deleted', async () => {
+    fixture.detectChanges();
+    http.expectOne('/data/statistics.json').flush(statisticsFile);
+    fixture.componentInstance.api.loadTasks();
+    fixture.detectChanges();
+    http.expectOne('/data/tasks.json').flush(tasksFile);
+    await fixture.whenStable();
+
+    fixture.componentInstance.api.removeTask('task-001').subscribe();
+    fixture.detectChanges();
+
+    expect(fixture.componentInstance.api.tasks()).toEqual([]);
+  });
+
+  it('shows an edited task title', async () => {
+    fixture.detectChanges();
+    http.expectOne('/data/statistics.json').flush(statisticsFile);
+    fixture.componentInstance.api.loadTasks();
+    fixture.detectChanges();
+    http.expectOne('/data/tasks.json').flush(tasksFile);
+    await fixture.whenStable();
+
+    fixture.componentInstance.api
+      .updateTask('task-001', {
+        title: 'Design the homepage',
+        description: tasksFile.tasks[0].description,
+        priority: 'high',
+        status: 'todo',
+        dueDate: tasksFile.tasks[0].dueDate,
+        assignee: tasksFile.tasks[0].assignee,
+      })
+      .subscribe();
+    fixture.detectChanges();
+
+    expect(fixture.componentInstance.api.tasks()[0]?.title).toBe('Design the homepage');
+  });
+
+  it('shows a task added in this session', async () => {
+    fixture.detectChanges();
+    http.expectOne('/data/statistics.json').flush(statisticsFile);
+    fixture.componentInstance.api.loadTasks();
+    fixture.detectChanges();
+    http.expectOne('/data/tasks.json').flush(tasksFile);
+    await fixture.whenStable();
+
+    fixture.componentInstance.api
+      .createTask({
+        title: 'Write release notes',
+        description: tasksFile.tasks[0].description,
+        priority: 'high',
+        status: 'todo',
+        dueDate: tasksFile.tasks[0].dueDate,
+        assignee: tasksFile.tasks[0].assignee,
+      })
+      .subscribe();
+    fixture.detectChanges();
+
+    expect(fixture.componentInstance.api.tasks().map((task) => task.id)).toEqual([
+      'task-001',
+      'task-002',
+    ]);
   });
 });

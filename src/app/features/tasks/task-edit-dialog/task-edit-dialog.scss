@@ -1,0 +1,79 @@
+:host {
+  display: block;
+  font-family: Inter, Tahoma, sans-serif;
+  color: #212121;
+}
+
+h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 24px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+}
+
+.mark {
+  color: #c62828;
+}
+
+.error {
+  color: #c62828;
+  font-weight: 400;
+}
+
+.field input[aria-invalid='true'],
+.field select[aria-invalid='true'] {
+  border-color: #c62828;
+}
+
+.field input,
+.field textarea,
+.field select {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  background: #fff;
+  color: #212121;
+  font: inherit;
+  font-weight: 400;
+}
+
+button {
+  padding: 8px 16px;
+  border: 0;
+  border-radius: 4px;
+  font: inherit;
+  font-size: 12.9px;
+  font-weight: 500;
+  line-height: 16px;
+  cursor: pointer;
+}
+
+.cancel {
+  background: transparent;
+  color: #212121;
+}
+
+.save {
+  background: var(--mat-sys-primary);
+  color: #fff;
+}
+
+button:focus-visible,
+.field input:focus-visible,
+.field textarea:focus-visible,
+.field select:focus-visible {
+  outline: 2px solid var(--mat-sys-primary);
+  outline-offset: 2px;
+}

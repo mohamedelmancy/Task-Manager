@@ -84,6 +84,11 @@ html[dir='rtl'] body.use-inter {
   }
 }
 
+.task-toast {
+  --mat-snack-bar-container-color: #2e7d32;
+  --mat-snack-bar-supporting-text-color: #fff;
+}
+
 .visually-hidden {
   position: absolute;
   width: 1px;

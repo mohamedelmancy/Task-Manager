@@ -30,10 +30,10 @@ npm install
 
 `npm install` also installs the audit tools in `tools/` and runs Husky, which installs the git hooks.
 
-To refresh the mock JSON data:
+To generate the mock JSON again, including `public/data/tasks.json` and `public/data/statistics.json`:
 
 ```bash
-node data-fetching/generate-data.js
+npm run generate-data
 ```
 
 See `DATA_README.md` for the data shape.
@@ -48,16 +48,17 @@ Open `http://localhost:4200/`. The app reloads when you save a file.
 
 ## Maintain
 
-| Command                | What it does                                            |
-| ---------------------- | ------------------------------------------------------- |
-| `npm run lint`         | Report ESLint issues in `src` TypeScript and HTML       |
-| `ng lint --fix`        | Fix the lint issues ESLint can correct                  |
-| `npm run format`       | Prettier on the project                                 |
-| `npm run format:check` | Check formatting without writing files                  |
-| `npm test`             | Unit tests in watch mode. axe-core runs with them       |
-| `npm run test:ci`      | Unit tests once, with coverage. Minimum 80%             |
-| `npm run build`        | Production build in `dist/`                             |
-| `npm run lighthouse`   | Lighthouse on the production build. Run this separately |
+| Command                 | What it does                                             |
+| ----------------------- | -------------------------------------------------------- |
+| `npm run lint`          | Report ESLint issues in `src` TypeScript and HTML        |
+| `ng lint --fix`         | Fix the lint issues ESLint can correct                   |
+| `npm run format`        | Prettier on the project                                  |
+| `npm run format:check`  | Check formatting without writing files                   |
+| `npm test`              | Unit tests in watch mode. axe-core runs with them        |
+| `npm run test:ci`       | Unit tests once, with coverage. Minimum 80%              |
+| `npm run build`         | Production build in `dist/`                              |
+| `npm run lighthouse`    | Lighthouse on the production build. Run this separately  |
+| `npm run generate-data` | Write fresh task and statistics JSON under `public/data` |
 
 `npm test` runs axe-core with the unit tests. Lighthouse does not start with them. Run it on its own with `npm run lighthouse`. It builds the production app, then checks Performance, Accessibility, Best Practices, and SEO. Each score must stay above 90.
 

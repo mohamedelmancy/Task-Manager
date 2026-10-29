@@ -1,0 +1,158 @@
+@if (loading()) {
+  <section class="columns" aria-busy="true" [attr.aria-label]="i18n.t('board.region')">
+    <p class="visually-hidden">{{ i18n.t('board.loading') }}</p>
+    @for (placeholder of [1, 2, 3]; track placeholder) {
+      <article class="column skeleton"></article>
+    }
+  </section>
+} @else if (failed()) {
+  <div class="status">
+    <p role="alert">{{ i18n.t('board.error') }}</p>
+    <button type="button" class="retry" (click)="retry()">{{ i18n.t('stats.retry') }}</button>
+  </div>
+} @else {
+  @if (actionError()) {
+    <p class="status" role="alert">{{ actionError() }}</p>
+  }
+  <section class="columns" cdkDropListGroup [attr.aria-label]="i18n.t('board.region')">
+    @for (column of columns(); track column.status) {
+      <section class="column">
+        <header class="column-header">
+          <h2 [id]="'column-' + column.status">{{ i18n.t(column.labelKey) }}</h2>
+          <span class="count" [attr.aria-label]="column.countLabel">{{ column.tasks.length }}</span>
+        </header>
+        <div
+          class="task-list"
+          cdkDropList
+          [id]="column.status"
+          [cdkDropListData]="column.tasks"
+          [attr.aria-labelledby]="'column-' + column.status"
+          (cdkDropListDropped)="drop($event)"
+        >
+          @for (task of column.tasks; track task.id) {
+            <article
+              class="task-card"
+              cdkDrag
+              [cdkDragDisabled]="inlineEdit()?.id === task.id"
+              [class.is-overdue]="task.overdue"
+              [class.menu-open]="openMenuId() === task.id"
+              [attr.aria-label]="task.title"
+              (cdkDragStarted)="closeMenu()"
+            >
+              <div class="task-top">
+                <span
+                  class="priority-chip"
+                  [class.high]="task.priority === 'high'"
+                  [class.medium]="task.priority === 'medium'"
+                  [class.low]="task.priority === 'low'"
+                >
+                  {{ i18n.t(task.priorityKey) }}
+                </span>
+                <div
+                  class="card-menu"
+                  (mousedown)="$event.stopPropagation()"
+                  (pointerdown)="$event.stopPropagation()"
+                >
+                  <button
+                    #taskMenuButton
+                    type="button"
+                    class="more-button"
+                    [attr.aria-expanded]="openMenuId() === task.id"
+                    aria-haspopup="menu"
+                    [attr.aria-controls]="openMenuId() === task.id ? 'task-menu-' + task.id : null"
+                    [attr.aria-label]="menuLabel(task.title)"
+                    (click)="toggleMenu(task.id)"
+                  >
+                    <svg class="more" viewBox="0 0 16 16" aria-hidden="true">
+                      <circle cx="8" cy="3" r="1.2" fill="currentColor" />
+                      <circle cx="8" cy="8" r="1.2" fill="currentColor" />
+                      <circle cx="8" cy="13" r="1.2" fill="currentColor" />
+                    </svg>
+                  </button>
+                  @if (openMenuId() === task.id) {
+                    <ul
+                      class="card-menu-list"
+                      role="menu"
+                      [id]="'task-menu-' + task.id"
+                      [attr.aria-label]="menuLabel(task.title)"
+                    >
+                      <li role="presentation">
+                        <button
+                          type="button"
+                          class="menu-item"
+                          role="menuitem"
+                          (click)="editTask(task.id, taskMenuButton)"
+                        >
+                          {{ i18n.t('task.edit') }}
+                        </button>
+                      </li>
+                      <li role="presentation">
+                        <button
+                          type="button"
+                          class="menu-item delete"
+                          role="menuitem"
+                          (click)="deleteTask(task.id, taskMenuButton)"
+                        >
+                          {{ i18n.t('task.delete') }}
+                        </button>
+                      </li>
+                    </ul>
+                  }
+                </div>
+              </div>
+              @if (editingField(task.id, 'title')) {
+                <input
+                  class="inline-title"
+                  type="text"
+                  [value]="inlineEdit()?.value"
+                  [attr.aria-label]="i18n.t('task.title')"
+                  (input)="changeInline($event)"
+                  (blur)="saveInline()"
+                  (keydown.enter)="saveInline()"
+                  (keydown.escape)="cancelInline($event)"
+                  (mousedown)="$event.stopPropagation()"
+                  (pointerdown)="$event.stopPropagation()"
+                />
+              } @else {
+                <h3 (dblclick)="startInline(task.id, 'title', task.title, $event)">
+                  {{ task.title }}
+                </h3>
+              }
+              @if (editingField(task.id, 'description')) {
+                <textarea
+                  class="inline-description"
+                  rows="3"
+                  [value]="inlineEdit()?.value"
+                  [attr.aria-label]="i18n.t('task.description')"
+                  (input)="changeInline($event)"
+                  (blur)="saveInline()"
+                  (keydown.escape)="cancelInline($event)"
+                  (mousedown)="$event.stopPropagation()"
+                  (pointerdown)="$event.stopPropagation()"
+                ></textarea>
+              } @else {
+                <p
+                  class="description"
+                  (dblclick)="startInline(task.id, 'description', task.description, $event)"
+                >
+                  {{ task.description }}
+                </p>
+              }
+              <p class="meta" [class.is-overdue]="task.overdue" [class.is-done]="task.done">
+                <img class="meta-icon" [src]="task.iconSrc" alt="" width="14" height="14" />
+                {{ task.note }}
+              </p>
+              @if (task.tag) {
+                <p class="tag">{{ task.tag }}</p>
+              }
+              <div class="assignee">
+                <span class="avatar" aria-hidden="true">{{ task.initials }}</span>
+                <span>{{ task.handle }}</span>
+              </div>
+            </article>
+          }
+        </div>
+      </section>
+    }
+  </section>
+}

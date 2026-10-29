@@ -1,14 +1,18 @@
 import { Routes } from '@angular/router';
 
-import { DashboardPage } from './features/dashboard/dashboard-page';
+const dashboardPage = () =>
+  import('./features/dashboard/dashboard-page').then((module) => module.DashboardPage);
 
 const sectionPage = () =>
   import('./features/section/section-page').then((module) => module.SectionPage);
 
+const tasksPage = () =>
+  import('./features/tasks/tasks-page/tasks-page').then((module) => module.TasksPage);
+
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'tasks' },
-  { path: 'dashboard', component: DashboardPage },
-  { path: 'tasks', loadComponent: sectionPage },
+  { path: 'dashboard', loadComponent: dashboardPage },
+  { path: 'tasks', loadComponent: tasksPage },
   { path: 'calendar', loadComponent: sectionPage },
   { path: 'analytics', loadComponent: sectionPage },
   { path: 'team', loadComponent: sectionPage },

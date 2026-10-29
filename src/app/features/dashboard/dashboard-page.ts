@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 
-import { TaskApi } from '../../core/api/task-api';
+import { Apis } from '../../core/api/apis';
 import { I18nService } from '../../core/i18n/i18n.service';
 import { ChangeType, Statistic } from '../../shared/types/task';
 
@@ -18,7 +18,7 @@ interface StatisticCard {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardPage {
-  private readonly taskApi = inject(TaskApi);
+  private readonly taskApi = inject(Apis);
   protected readonly i18n = inject(I18nService);
   protected readonly placeholders = [1, 2, 3, 4];
 

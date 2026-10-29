@@ -1,0 +1,89 @@
+<h2 mat-dialog-title>{{ i18n.t(headingKey) }}</h2>
+<form [formGroup]="form" (ngSubmit)="save()">
+  <div mat-dialog-content>
+    <label class="field">
+      <span class="name">
+        {{ i18n.t('task.title') }}
+        <span class="mark" aria-hidden="true">*</span>
+      </span>
+      <input
+        id="task-title"
+        type="text"
+        formControlName="title"
+        required
+        [attr.aria-invalid]="invalid('title')"
+        [attr.aria-describedby]="invalid('title') ? 'task-title-error' : null"
+      />
+      @if (invalid('title')) {
+        <span class="error" id="task-title-error" role="alert">{{
+          i18n.t('task.titleRequired')
+        }}</span>
+      }
+    </label>
+    <label class="field">
+      {{ i18n.t('task.description') }}
+      <textarea formControlName="description" rows="3"></textarea>
+    </label>
+    <label class="field">
+      {{ i18n.t('filters.priority') }}
+      <select formControlName="priority">
+        @for (priority of priorities; track priority.value) {
+          <option [value]="priority.value">{{ i18n.t(priority.labelKey) }}</option>
+        }
+      </select>
+    </label>
+    <label class="field">
+      {{ i18n.t('filters.status') }}
+      <select formControlName="status">
+        @for (status of statuses; track status.value) {
+          <option [value]="status.value">{{ i18n.t(status.labelKey) }}</option>
+        }
+      </select>
+    </label>
+    <label class="field">
+      <span class="name">
+        {{ i18n.t('task.dueDate') }}
+        <span class="mark" aria-hidden="true">*</span>
+      </span>
+      <input
+        id="task-dueDate"
+        type="date"
+        formControlName="dueDate"
+        required
+        [attr.aria-invalid]="invalid('dueDate')"
+        [attr.aria-describedby]="invalid('dueDate') ? 'task-dueDate-error' : null"
+      />
+      @if (invalid('dueDate')) {
+        <span class="error" id="task-dueDate-error" role="alert">{{
+          i18n.t('task.dueDateRequired')
+        }}</span>
+      }
+    </label>
+    <label class="field">
+      <span class="name">
+        {{ i18n.t('filters.assignee') }}
+        <span class="mark" aria-hidden="true">*</span>
+      </span>
+      <select
+        id="task-assigneeId"
+        formControlName="assigneeId"
+        required
+        [attr.aria-invalid]="invalid('assigneeId')"
+        [attr.aria-describedby]="invalid('assigneeId') ? 'task-assigneeId-error' : null"
+      >
+        @for (person of assignees(); track person.id) {
+          <option [value]="person.id">{{ person.name }}</option>
+        }
+      </select>
+      @if (invalid('assigneeId')) {
+        <span class="error" id="task-assigneeId-error" role="alert">{{
+          i18n.t('task.assigneeRequired')
+        }}</span>
+      }
+    </label>
+  </div>
+  <div mat-dialog-actions>
+    <button type="button" class="cancel" (click)="cancel()">{{ i18n.t('task.cancel') }}</button>
+    <button type="submit" class="save">{{ i18n.t('task.save') }}</button>
+  </div>
+</form>
