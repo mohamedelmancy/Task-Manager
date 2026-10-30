@@ -1,0 +1,129 @@
+:host {
+  display: block;
+  margin-top: 24px;
+}
+
+.analytics h2 {
+  margin: 0 0 16px;
+  color: #212121;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 24px;
+}
+
+.charts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.chart-card {
+  box-sizing: border-box;
+  padding: 24px;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow:
+    0 1px 2px rgb(0 0 0 / 6%),
+    0 8px 16px rgb(15 23 42 / 4%);
+}
+
+.chart-card h3 {
+  margin: 0 0 16px;
+  color: #212121;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 22px;
+}
+
+.body {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.plot {
+  position: relative;
+  flex: none;
+  width: 180px;
+  height: 180px;
+}
+
+.legend {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.legend li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  color: #212121;
+  font-size: 14px;
+  line-height: 22px;
+}
+
+.legend li:first-child {
+  margin-top: 0;
+}
+
+.swatch {
+  flex: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+}
+
+.count {
+  margin-inline-start: auto;
+  font-weight: 700;
+}
+
+.skeleton {
+  min-height: 248px;
+  background: #f3f4f6;
+}
+
+.status,
+.status p {
+  margin: 0;
+  color: #212121;
+  font-size: 14px;
+  line-height: 22px;
+}
+
+.retry {
+  margin-top: 12px;
+  padding: 8px 16px;
+  border: 0;
+  border-radius: 4px;
+  background: var(--mat-sys-primary);
+  color: #fff;
+  font-size: 12.9px;
+  font-weight: 500;
+  line-height: 100%;
+  cursor: pointer;
+}
+
+.retry:focus-visible {
+  outline: 2px solid var(--mat-sys-primary);
+  outline-offset: 2px;
+}
+
+@media (max-width: 64rem) {
+  .charts {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 40rem) {
+  .chart-card h3 {
+    text-align: center;
+  }
+
+  .body {
+    flex-direction: column;
+    align-items: center;
+  }
+}

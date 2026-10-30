@@ -14,7 +14,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "prepare": "husky",
-    "postinstall": "npm install --prefix tools"
+    "postinstall": "npm install --prefix tools && node tools/fix-chart-import.js"
   },
   "lint-staged": {
     "*.{ts,html}": [
@@ -35,6 +35,7 @@
     "@angular/material": "^21.2.14",
     "@angular/platform-browser": "^21.2.0",
     "@angular/router": "^21.2.0",
+    "chart.js": "4.6.1",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
   },

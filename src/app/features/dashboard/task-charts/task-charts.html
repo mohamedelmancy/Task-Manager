@@ -1,0 +1,56 @@
+<section class="analytics" aria-labelledby="task-analytics-title">
+  <h2 id="task-analytics-title">{{ i18n.t('charts.title') }}</h2>
+
+  @if (loading()) {
+    <div class="charts" aria-busy="true">
+      <p class="visually-hidden">{{ i18n.t('charts.loading') }}</p>
+      <article class="chart-card skeleton"></article>
+      <article class="chart-card skeleton"></article>
+    </div>
+  } @else if (failed()) {
+    <div class="status">
+      <p role="alert">{{ i18n.t('charts.error') }}</p>
+      <button type="button" class="retry" (click)="retry()">{{ i18n.t('stats.retry') }}</button>
+    </div>
+  } @else if (empty()) {
+    <p class="status">{{ i18n.t('charts.empty') }}</p>
+  } @else {
+    <div class="charts">
+      <article class="chart-card" aria-labelledby="chart-status-title">
+        <h3 id="chart-status-title">{{ i18n.t('charts.byStatus') }}</h3>
+        <div class="body">
+          <div class="plot">
+            <canvas #statusChart aria-hidden="true"></canvas>
+          </div>
+          <ul class="legend">
+            @for (slice of statusSlices(); track slice.key) {
+              <li>
+                <span class="swatch" [style.background]="slice.color" aria-hidden="true"></span>
+                <span>{{ slice.label }}</span>
+                <span class="count">{{ slice.count }}</span>
+              </li>
+            }
+          </ul>
+        </div>
+      </article>
+
+      <article class="chart-card" aria-labelledby="chart-priority-title">
+        <h3 id="chart-priority-title">{{ i18n.t('charts.byPriority') }}</h3>
+        <div class="body">
+          <div class="plot">
+            <canvas #priorityChart aria-hidden="true"></canvas>
+          </div>
+          <ul class="legend">
+            @for (slice of prioritySlices(); track slice.key) {
+              <li>
+                <span class="swatch" [style.background]="slice.color" aria-hidden="true"></span>
+                <span>{{ slice.label }}</span>
+                <span class="count">{{ slice.count }}</span>
+              </li>
+            }
+          </ul>
+        </div>
+      </article>
+    </div>
+  }
+</section>

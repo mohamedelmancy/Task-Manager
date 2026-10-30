@@ -1,7 +1,9 @@
 import { Routes } from '@angular/router';
 
 const dashboardPage = () =>
-  import('./features/dashboard/dashboard-page').then((module) => module.DashboardPage);
+  import('./features/dashboard/dashboard-page/dashboard-page').then(
+    (module) => module.DashboardPage,
+  );
 
 const sectionPage = () =>
   import('./features/section/section-page').then((module) => module.SectionPage);
