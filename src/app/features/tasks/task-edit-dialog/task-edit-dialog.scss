@@ -49,6 +49,10 @@ h2 {
   font-weight: 400;
 }
 
+.field textarea {
+  resize: vertical;
+}
+
 button {
   padding: 8px 16px;
   border: 0;

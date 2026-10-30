@@ -163,7 +163,26 @@
 
 @media (max-width: 40rem) {
   .filters,
-  .statuses {
+  .statuses,
+  .filter-actions {
     flex-wrap: wrap;
+  }
+
+  .filter-actions {
+    width: 100%;
+    margin-inline-start: 0;
+  }
+
+  .dropdown {
+    flex: 1 1 0;
+  }
+
+  .dropdown-button {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .new-task {
+    flex: 1 1 100%;
   }
 }

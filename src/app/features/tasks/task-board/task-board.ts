@@ -90,12 +90,48 @@ export class TaskBoard {
     this.taskApi.retryTasks();
   }
 
-  /** Reorders or moves a card between columns. The new order lasts for this visit only. */
+  /** Reorders cards for this visit. A move into another column saves the new status. */
   protected drop(event: CdkDragDrop<BoardCard[]>): void {
+    const cardId = event.previousContainer.data[event.previousIndex]?.id;
+    const statusChanged = event.previousContainer !== event.container;
     const moved = this.moveTasks(event);
-    if (moved) {
-      this.edits.set(moved);
+    if (!moved) {
+      return;
     }
+
+    this.edits.set(moved);
+    if (statusChanged && cardId) {
+      this.saveDroppedStatus(moved, cardId);
+    }
+  }
+
+  /** Saves a dropped status the same way an edit does, so Recent activity shows the change. */
+  private saveDroppedStatus(tasks: Task[], taskId: string): void {
+    const task = tasks.find((item) => item.id === taskId);
+    if (!task) {
+      return;
+    }
+
+    this.taskApi
+      .updateTask(task.id, {
+        title: task.title,
+        description: task.description,
+        priority: task.priority,
+        status: task.status,
+        dueDate: task.dueDate,
+        assignee: task.assignee,
+      })
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (saved) => {
+          this.edits.update(
+            (current) => current?.map((item) => (item.id === saved.id ? saved : item)) ?? null,
+          );
+        },
+        error: () => {
+          this.actionError.set(this.i18n.t('task.updateError'));
+        },
+      });
   }
 
   protected toggleMenu(taskId: string): void {
