@@ -12,6 +12,7 @@ import {
 } from '../../shared/types/task';
 import { ActivityLog, ActivitySnapshot } from '../activity/activity-log';
 import { clearGetCache } from '../http/cache-get.interceptor';
+import { publicFile } from '../public-file';
 import { parseStatistics, parseTasks } from './task-data';
 
 export interface NewTask {
@@ -36,7 +37,7 @@ export class Apis {
   readonly saveError = signal('');
 
   private readonly statisticsResource = httpResource<StatisticsResponse>(
-    () => '/data/statistics.json',
+    () => publicFile('data/statistics.json'),
     { defaultValue: EMPTY_STATISTICS, parse: parseStatistics },
   );
 
@@ -57,12 +58,12 @@ export class Apis {
   }
 
   retryStatistics(): void {
-    clearGetCache('/data/statistics.json');
+    clearGetCache(publicFile('data/statistics.json'));
     this.statisticsResource.reload();
   }
 
   retryTasks(): void {
-    clearGetCache('/data/tasks.json');
+    clearGetCache(publicFile('data/tasks.json'));
     this.tasksResource.reload();
   }
 
@@ -159,7 +160,7 @@ export class Apis {
 
   /** Keeps the tasks request idle until a screen asks for them. */
   private tasksUrl(): string | undefined {
-    return this.tasksRequested() ? '/data/tasks.json' : undefined;
+    return this.tasksRequested() ? publicFile('data/tasks.json') : undefined;
   }
 
   private nextTaskId(): string {

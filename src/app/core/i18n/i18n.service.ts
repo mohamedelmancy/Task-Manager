@@ -2,6 +2,7 @@ import { httpResource } from '@angular/common/http';
 import { computed, effect, inject, Injectable, signal } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 
+import { publicFile } from '../public-file';
 import {
   DEFAULT_LANGUAGE_ID,
   LANGUAGE_STORAGE_KEY,
@@ -17,10 +18,13 @@ export class I18nService {
   private readonly selectedLanguageId = signal(readInitialLanguageId());
   private readonly dictionary = signal<Readonly<Record<string, string>>>({});
 
-  private readonly languagesResource = httpResource<Language[]>(() => '/i18n/languages.json', {
-    defaultValue: [],
-    parse: parseLanguages,
-  });
+  private readonly languagesResource = httpResource<Language[]>(
+    () => publicFile('i18n/languages.json'),
+    {
+      defaultValue: [],
+      parse: parseLanguages,
+    },
+  );
 
   private readonly dictionaryResource = httpResource<Record<string, string>>(
     () => this.dictionaryUrl(),
@@ -79,7 +83,7 @@ export class I18nService {
       return undefined;
     }
 
-    return `/i18n/${languageId}.json`;
+    return publicFile(`i18n/${languageId}.json`);
   }
 
   /** Keeps the last loaded dictionary while the next language file is still loading. */

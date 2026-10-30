@@ -18,7 +18,7 @@ const teamPage = () =>
   import('./features/team/team-page/team-page').then((module) => module.TeamPage);
 
 export const routes: Routes = [
-  { path: '', pathMatch: 'full', redirectTo: 'tasks' },
+  { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
   { path: 'dashboard', loadComponent: dashboardPage },
   { path: 'tasks', loadComponent: tasksPage },
   { path: 'calendar', loadComponent: calendarPage },
