@@ -1,5 +1,5 @@
 import { httpResource } from '@angular/common/http';
-import { computed, Injectable, signal } from '@angular/core';
+import { computed, Injectable, inject, signal } from '@angular/core';
 import { Observable, of, throwError } from 'rxjs';
 
 import {
@@ -10,6 +10,7 @@ import {
   TaskStatus,
   TasksResponse,
 } from '../../shared/types/task';
+import { ActivityLog, ActivitySnapshot } from '../activity/activity-log';
 import { clearGetCache } from '../http/cache-get.interceptor';
 import { parseStatistics, parseTasks } from './task-data';
 
@@ -27,6 +28,7 @@ const EMPTY_TASKS: TasksResponse = { tasks: [], meta: { totalCount: 0, lastUpdat
 
 @Injectable({ providedIn: 'root' })
 export class Apis {
+  private readonly activityLog = inject(ActivityLog);
   private readonly tasksRequested = signal(false);
   private readonly removedIds = signal<string[]>([]);
   private readonly addedTasks = signal<Task[]>([]);
@@ -82,9 +84,14 @@ export class Apis {
     };
     this.saveError.set('');
     this.addedTasks.update((tasks) => [...tasks, task]);
+    this.activityLog.record('created', toSnapshot(task));
     return of(task);
   }
 
+  /**
+   * Replaces the task in this session and records the fields that changed.
+   * A task that is already done keeps its original completion time.
+   */
   updateTask(taskId: string, draft: NewTask): Observable<Task> {
     const current = this.tasks().find((task) => task.id === taskId);
     if (!current) {
@@ -107,11 +114,16 @@ export class Apis {
     this.saveError.set('');
     this.addedTasks.update((tasks) => tasks.map((item) => (item.id === task.id ? task : item)));
     this.changedTasks.update((tasks) => [...tasks.filter((item) => item.id !== task.id), task]);
+    this.activityLog.record('updated', toSnapshot(task), toSnapshot(current));
     return of(task);
   }
 
   removeTask(taskId: string): Observable<void> {
+    const current = this.tasks().find((task) => task.id === taskId);
     this.removedIds.update((ids) => [...ids, taskId]);
+    if (current) {
+      this.activityLog.record('deleted', toSnapshot(current));
+    }
     return of(undefined);
   }
 
@@ -123,6 +135,10 @@ export class Apis {
     return this.statisticsResource.value().statistics;
   }
 
+  /**
+   * Joins the loaded file with this session's edits.
+   * Creates, updates, and deletes stay in memory and are not written back to the file.
+   */
   private readTasks(): Task[] {
     if (this.tasksResource.status() === 'error') {
       return [];
@@ -141,6 +157,7 @@ export class Apis {
     return [...loaded, ...pending];
   }
 
+  /** Keeps the tasks request idle until a screen asks for them. */
   private tasksUrl(): string | undefined {
     return this.tasksRequested() ? '/data/tasks.json' : undefined;
   }
@@ -151,6 +168,7 @@ export class Apis {
     return `task-${String(next).padStart(3, '0')}`;
   }
 
+  /** A done task is never overdue. Dates are compared as `YYYY-MM-DD`. */
   private isOverdue(status: TaskStatus, dueDate: string): boolean {
     const today = this.tasksUpdated().slice(0, 10);
     return status !== 'done' && today > dueDate;
@@ -163,4 +181,16 @@ export class Apis {
 
     return this.tasksResource.value().meta.lastUpdated;
   }
+}
+
+function toSnapshot(task: Task): ActivitySnapshot {
+  return {
+    id: task.id,
+    title: task.title,
+    description: task.description,
+    priority: task.priority,
+    status: task.status,
+    dueDate: task.dueDate,
+    assigneeName: task.assignee.name,
+  };
 }

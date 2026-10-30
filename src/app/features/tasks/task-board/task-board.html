@@ -16,7 +16,7 @@
   }
   <section class="columns" cdkDropListGroup [attr.aria-label]="i18n.t('board.region')">
     @for (column of columns(); track column.status) {
-      <section class="column">
+      <section class="column" animate.enter="task-rise">
         <header class="column-header">
           <h2 [id]="'column-' + column.status">{{ i18n.t(column.labelKey) }}</h2>
           <span class="count" [attr.aria-label]="column.countLabel">{{ column.tasks.length }}</span>
@@ -32,6 +32,7 @@
           @for (task of column.tasks; track task.id) {
             <article
               class="task-card"
+              animate.enter="task-rise"
               cdkDrag
               [cdkDragDisabled]="inlineEdit()?.id === task.id"
               [class.is-overdue]="task.overdue"

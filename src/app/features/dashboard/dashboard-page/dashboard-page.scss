@@ -1,6 +1,7 @@
 :host {
   display: block;
   padding: 24px;
+  animation: page-enter 240ms ease;
 }
 
 .cards {
@@ -17,6 +18,19 @@
   box-shadow:
     0 1px 2px rgb(0 0 0 / 6%),
     0 8px 16px rgb(15 23 42 / 4%);
+  animation: rise 280ms ease both;
+}
+
+.card:nth-child(2) {
+  animation-delay: 50ms;
+}
+
+.card:nth-child(3) {
+  animation-delay: 100ms;
+}
+
+.card:nth-child(4) {
+  animation-delay: 150ms;
 }
 
 .title {
@@ -72,9 +86,64 @@
   color: #c23f38;
 }
 
-.skeleton {
+.card.skeleton {
   min-height: 151px;
-  background: #f3f4f6;
+  background: #fff;
+  animation: none;
+}
+
+.bar {
+  display: block;
+  border-radius: 4px;
+  background: #b7c2d0;
+  animation: pulse 1.2s ease-in-out infinite;
+}
+
+.bar-title {
+  width: 58%;
+  height: 14px;
+}
+
+.bar-value {
+  width: 42%;
+  height: 32px;
+  margin-top: 16px;
+}
+
+.bar-note {
+  width: 72%;
+  height: 12px;
+  margin-top: 16px;
+}
+
+@keyframes page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes pulse {
+  50% {
+    background: #8e9aab;
+  }
 }
 
 .status,

@@ -7,6 +7,7 @@ export interface Language {
 export const LANGUAGE_STORAGE_KEY = 'task-manager.language';
 export const DEFAULT_LANGUAGE_ID = 'en';
 
+/** Uses the saved language, then the browser language, then English. */
 export function readInitialLanguageId(): string {
   const storedLanguage = readStoredLanguage();
   if (storedLanguage) {

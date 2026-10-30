@@ -96,8 +96,8 @@ function serve() {
 }
 
 async function measure(address) {
-  const lighthouse = (await import('../tools/node_modules/lighthouse/core/index.js')).default;
-  const chromeLauncher = await import('../tools/node_modules/chrome-launcher/dist/index.js');
+  const lighthouse = (await import('lighthouse')).default;
+  const chromeLauncher = await import('chrome-launcher');
   const chrome = await chromeLauncher.launch({ chromeFlags: ['--headless', '--no-sandbox'] });
 
   try {

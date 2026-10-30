@@ -2,7 +2,7 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
-import axe from '../../tools/node_modules/axe-core';
+import axe from 'axe-core';
 
 import { routes } from './app.routes';
 
@@ -68,8 +68,7 @@ describe('App', () => {
     fixture.detectChanges();
     flushLanguages();
     flushDictionary('en', english);
-    await fixture.whenStable();
-    fixture.detectChanges();
+    await settle();
 
     const results = await axe.run(fixture.nativeElement);
     const violations = results.violations.map((violation) => violation.id);
@@ -81,8 +80,7 @@ describe('App', () => {
     fixture.detectChanges();
     flushLanguages();
     flushDictionary('en', english);
-    await fixture.whenStable();
-    fixture.detectChanges();
+    await settle();
 
     expect(text()).toContain('Task Manager');
     expect(document.documentElement.dir).toBe('ltr');
@@ -93,13 +91,11 @@ describe('App', () => {
     fixture.detectChanges();
     flushLanguages();
     flushDictionary('en', english);
-    await fixture.whenStable();
-    fixture.detectChanges();
+    await settle();
 
     chooseLanguage('ar');
     flushDictionary('ar', arabic);
-    await fixture.whenStable();
-    fixture.detectChanges();
+    await settle();
 
     expect(text()).toContain('مدير المهام');
     expect(document.documentElement.dir).toBe('rtl');
@@ -107,8 +103,7 @@ describe('App', () => {
 
     chooseLanguage('en');
     http.expectNone('/i18n/en.json');
-    await fixture.whenStable();
-    fixture.detectChanges();
+    await settle();
 
     expect(text()).toContain('Task Manager');
     expect(document.documentElement.dir).toBe('ltr');
@@ -118,13 +113,11 @@ describe('App', () => {
     fixture.detectChanges();
     flushLanguages();
     flushDictionary('en', english);
-    await fixture.whenStable();
-    fixture.detectChanges();
+    await settle();
 
     chooseLanguage('fr');
     flushDictionary('fr', french);
-    await fixture.whenStable();
-    fixture.detectChanges();
+    await settle();
 
     expect(text()).toContain('Gestionnaire de tâches');
     expect(document.documentElement.lang).toBe('fr');
@@ -134,8 +127,7 @@ describe('App', () => {
     fixture.detectChanges();
     http.expectOne('/i18n/languages.json').flush('nope', { status: 500, statusText: 'Error' });
     flushDictionary('en', english);
-    await fixture.whenStable();
-    fixture.detectChanges();
+    await settle();
 
     openAccountMenu();
     expect(text()).toContain('Translations could not be loaded.');
@@ -146,8 +138,7 @@ describe('App', () => {
     retry?.click();
     fixture.detectChanges();
     flushLanguages();
-    await fixture.whenStable();
-    fixture.detectChanges();
+    await settle();
 
     expect(text()).toContain('Task Manager');
   });
@@ -158,6 +149,26 @@ describe('App', () => {
 
   function flushDictionary(languageId: string, dictionary: Record<string, string>): void {
     http.expectOne(`/i18n/${languageId}.json`).flush(dictionary);
+  }
+
+  async function settle(): Promise<void> {
+    flushData();
+    await fixture.whenStable();
+    fixture.detectChanges();
+    flushData();
+    await fixture.whenStable();
+    fixture.detectChanges();
+  }
+
+  function flushData(): void {
+    for (const request of http.match((candidate) => candidate.url.startsWith('/data/'))) {
+      if (request.request.url.endsWith('/tasks.json')) {
+        request.flush({ tasks: [], meta: { totalCount: 0, lastUpdated: '' } });
+        continue;
+      }
+
+      request.flush({ statistics: [], lastUpdated: '' });
+    }
   }
 
   function openAccountMenu(): void {

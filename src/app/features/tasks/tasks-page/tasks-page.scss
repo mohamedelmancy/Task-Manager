@@ -1,6 +1,7 @@
 :host {
   display: block;
   padding: 24px;
+  animation: page-enter 240ms ease;
 }
 
 .filters {
@@ -147,6 +148,16 @@
   .filters {
     flex-wrap: wrap;
     gap: 8px;
+  }
+}
+
+@keyframes page-enter {
+  from {
+    transform: translateY(8px);
+  }
+
+  to {
+    transform: none;
   }
 }
 

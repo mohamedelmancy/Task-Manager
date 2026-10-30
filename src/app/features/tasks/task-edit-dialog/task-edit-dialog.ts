@@ -10,7 +10,13 @@ import {
   signal,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormBuilder,
+  ReactiveFormsModule,
+  ValidationErrors,
+  Validators,
+} from '@angular/forms';
 import {
   MAT_DIALOG_DATA,
   MatDialog,
@@ -33,6 +39,7 @@ export interface TaskDraft {
 
 export interface TaskEditData {
   task?: Task;
+  assigneeId?: string;
 }
 
 export function openNewTask(
@@ -51,11 +58,12 @@ export function startNewTask(
   destroyRef: DestroyRef,
   onSaved: () => void,
   onError: () => void,
+  assigneeId = '',
 ): void {
   taskApi.loadTasks();
   dialog
     .open<TaskEditDialog, TaskEditData, TaskDraft>(TaskEditDialog, {
-      data: {},
+      data: { assigneeId },
       width: '28rem',
       maxWidth: 'calc(100vw - 32px)',
       autoFocus: 'first-tabbable',
@@ -105,13 +113,14 @@ export class TaskEditDialog {
     { value: 'done', labelKey: 'filters.done' },
   ];
   protected readonly submitted = signal(false);
+  protected readonly earliestDueDate = localToday();
   protected readonly form = this.formBuilder.nonNullable.group({
     title: [this.data.task?.title ?? '', Validators.required],
     description: [this.data.task?.description ?? ''],
     priority: [this.data.task?.priority ?? 'medium'],
     status: [this.data.task?.status ?? 'todo'],
-    dueDate: [this.data.task?.dueDate ?? '', Validators.required],
-    assigneeId: [this.data.task?.assignee.id ?? '', Validators.required],
+    dueDate: [this.data.task?.dueDate ?? '', [Validators.required, dueDateNotPast]],
+    assigneeId: [this.data.task?.assignee.id ?? this.data.assigneeId ?? '', Validators.required],
   });
 
   constructor() {
@@ -131,6 +140,12 @@ export class TaskEditDialog {
 
   protected invalid(name: TaskField): boolean {
     return this.submitted() && this.form.controls[name].invalid;
+  }
+
+  protected dueDateErrorKey(): string {
+    return this.form.controls.dueDate.hasError('past')
+      ? 'task.dueDatePast'
+      : 'task.dueDateRequired';
   }
 
   protected save(): void {
@@ -169,10 +184,31 @@ export class TaskEditDialog {
   }
 }
 
+/** Today's date in the local calendar, as `YYYY-MM-DD`, so it can be compared as text. */
+function localToday(): string {
+  const now = new Date();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  return `${now.getFullYear()}-${month}-${day}`;
+}
+
+/** Rejects a due date before today. An empty value is left for the required check. */
+function dueDateNotPast(control: AbstractControl<string>): ValidationErrors | null {
+  const value = control.value;
+  if (value === '' || value >= localToday()) {
+    return null;
+  }
+
+  return { past: true };
+}
+
+/** Lists each person who is assigned to at least one task, in the order they first appear. */
 function peopleFrom(tasks: Task[]): Assignee[] {
   const people = new Map<string, Assignee>();
   for (const task of tasks) {
-    people.set(task.assignee.id, task.assignee);
+    if (!people.has(task.assignee.id)) {
+      people.set(task.assignee.id, task.assignee);
+    }
   }
 
   return [...people.values()];

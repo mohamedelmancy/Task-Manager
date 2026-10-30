@@ -71,6 +71,7 @@ export class TaskBoard {
   readonly assigneeId = input('all');
   readonly query = input('');
 
+  /** Full board order after a drag. Null until the first drop, so the loaded order is used. */
   private readonly edits = signal<Task[] | null>(null);
   protected readonly openMenuId = signal<string | null>(null);
   protected readonly inlineEdit = signal<InlineEdit | null>(null);
@@ -89,6 +90,7 @@ export class TaskBoard {
     this.taskApi.retryTasks();
   }
 
+  /** Reorders or moves a card between columns. The new order lasts for this visit only. */
   protected drop(event: CdkDragDrop<BoardCard[]>): void {
     const moved = this.moveTasks(event);
     if (moved) {
@@ -248,6 +250,7 @@ export class TaskBoard {
     });
   }
 
+  /** Uses the drag order when one exists, then appends tasks created after that drop. */
   private placedTasks(): Task[] {
     const saved = this.taskApi.tasks();
     const edits = this.edits();
@@ -298,6 +301,7 @@ export class TaskBoard {
       });
   }
 
+  /** A task is shown only when every active filter matches. An empty search matches everything. */
   private matchesFilters(task: Task): boolean {
     const status = this.status();
     const priority = this.priority();
@@ -310,6 +314,10 @@ export class TaskBoard {
     return statusMatches && priorityMatches && assigneeMatches && queryMatches;
   }
 
+  /**
+   * Applies a drop to the whole task list.
+   * A card that changes column gets that column's status. A drop in the same spot is ignored.
+   */
   private moveTasks(event: CdkDragDrop<BoardCard[]>): Task[] | null {
     const sameSpot =
       event.previousContainer === event.container && event.previousIndex === event.currentIndex;
@@ -389,6 +397,10 @@ function toCard(
   };
 }
 
+/**
+ * Done tasks show when they were completed.
+ * Overdue tasks show how many days late they are, and the rest show the due date.
+ */
 function taskNote(
   task: Task,
   today: string,
@@ -430,6 +442,10 @@ function noteIcon(task: Task): string {
   return 'icons/calendar.svg';
 }
 
+/**
+ * Moving a task to Done clears the overdue flag and keeps an existing completion time.
+ * Moving it out of Done clears that time and recalculates overdue from the due date.
+ */
 function withStatus(task: Task, status: TaskStatus, today: string): Task {
   if (status === 'done') {
     return {
@@ -448,6 +464,7 @@ function withStatus(task: Task, status: TaskStatus, today: string): Task {
   };
 }
 
+/** Rebuilds the list as To Do, then In Progress, then Done, using the dropped card order in each column. */
 function orderTasks(
   tasks: Task[],
   previousStatus: TaskStatus,
@@ -472,6 +489,7 @@ function groupByStatus(tasks: Task[]): Record<TaskStatus, Task[]> {
   };
 }
 
+/** Keeps the visible drop order, then appends tasks hidden by the current filters. */
 function sortBucket(tasks: Task[], cards: BoardCard[]): Task[] {
   const ids = cards.map((card) => card.id);
   const visible = ids
@@ -486,12 +504,14 @@ function moveCard(cards: BoardCard[], from: number, to: number): void {
   cards.splice(to, 0, card);
 }
 
+/** Whole calendar days between two dates. The time of day is ignored. */
 function daysBetween(earlier: string, later: string): number {
   const start = Date.parse(`${earlier.slice(0, 10)}T00:00:00Z`);
   const end = Date.parse(`${later.slice(0, 10)}T00:00:00Z`);
   return Math.round((end - start) / 86_400_000);
 }
 
+/** Formats the calendar day in local time so a UTC timestamp does not shift the date. */
 function formatDay(isoDate: string, languageId: string): string {
   const [year, month, day] = isoDate.slice(0, 10).split('-').map(Number);
   return new Intl.DateTimeFormat(languageId, { month: 'short', day: 'numeric' }).format(

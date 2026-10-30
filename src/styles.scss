@@ -84,6 +84,28 @@ html[dir='rtl'] body.use-inter {
   }
 }
 
+.task-rise {
+  animation: task-rise 240ms ease both;
+}
+
+app-task-board .columns > .column:nth-child(2).task-rise {
+  animation-delay: 60ms;
+}
+
+app-task-board .columns > .column:nth-child(3).task-rise {
+  animation-delay: 120ms;
+}
+
+@keyframes task-rise {
+  from {
+    transform: translateY(8px);
+  }
+
+  to {
+    transform: none;
+  }
+}
+
 .task-toast {
   --mat-snack-bar-container-color: #2e7d32;
   --mat-snack-bar-supporting-text-color: #fff;

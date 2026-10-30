@@ -69,6 +69,7 @@ export class I18nService {
     return this.languagesResource.value();
   }
 
+  /** Waits to request a dictionary until the selected language is in the language list. */
   private dictionaryUrl(): string | undefined {
     const languageId = this.selectedLanguageId();
     const languages = this.knownLanguages();
@@ -81,6 +82,7 @@ export class I18nService {
     return `/i18n/${languageId}.json`;
   }
 
+  /** Keeps the last loaded dictionary while the next language file is still loading. */
   private rememberResolvedDictionary(): void {
     const status = this.dictionaryResource.status();
     if (status !== 'resolved' && status !== 'local') {
@@ -102,6 +104,7 @@ export class I18nService {
     }
   }
 
+  /** Falls back to the first listed language when the saved choice is no longer available. */
   private useFirstLanguageWhenCurrentIsMissing(): void {
     const languages = this.languages();
     if (languages.length === 0) {

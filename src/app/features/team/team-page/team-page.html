@@ -1,0 +1,38 @@
+<section class="team" aria-labelledby="team-heading">
+  <div class="heading">
+    <h2 id="team-heading">{{ i18n.t('team.title') }}</h2>
+    <p>{{ i18n.t('team.intro') }}</p>
+  </div>
+
+  @if (saveError()) {
+    <p class="save-error" role="alert">{{ saveError() }}</p>
+  }
+
+  @if (loading()) {
+    <p class="status" role="status">{{ i18n.t('team.loading') }}</p>
+  } @else if (failed()) {
+    <div class="status">
+      <p role="alert">{{ i18n.t('team.tasksError') }}</p>
+      <button type="button" class="retry" (click)="retry()">{{ i18n.t('team.retry') }}</button>
+    </div>
+  } @else if (empty()) {
+    <p class="status">{{ i18n.t('team.empty') }}</p>
+  } @else {
+    <ul class="members">
+      @for (member of members(); track member.id) {
+        <li class="member" animate.enter="member-enter">
+          <span class="avatar" aria-hidden="true">{{ member.avatar }}</span>
+          <div class="details">
+            <p class="name">{{ member.name }}</p>
+            <a class="email" [href]="'mailto:' + member.email">{{ member.email }}</a>
+            <p class="count">{{ member.taskLabel }}</p>
+          </div>
+          <button type="button" class="assign" (click)="assign(member.id)">
+            {{ i18n.t('team.assign') }}
+            <span class="visually-hidden">{{ member.name }}</span>
+          </button>
+        </li>
+      }
+    </ul>
+  }
+</section>

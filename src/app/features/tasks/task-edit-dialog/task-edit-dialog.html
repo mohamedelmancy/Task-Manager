@@ -50,12 +50,13 @@
         type="date"
         formControlName="dueDate"
         required
+        [min]="earliestDueDate"
         [attr.aria-invalid]="invalid('dueDate')"
         [attr.aria-describedby]="invalid('dueDate') ? 'task-dueDate-error' : null"
       />
       @if (invalid('dueDate')) {
         <span class="error" id="task-dueDate-error" role="alert">{{
-          i18n.t('task.dueDateRequired')
+          i18n.t(dueDateErrorKey())
         }}</span>
       }
     </label>

@@ -1,0 +1,178 @@
+:host {
+  display: block;
+  padding: 24px;
+  color: #212121;
+  font-size: 14px;
+  line-height: 20px;
+  animation: page-enter 240ms ease;
+}
+
+.team {
+  container-type: inline-size;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 2px 4px 0 rgb(0 0 0 / 8%);
+}
+
+.heading,
+.save-error,
+.status {
+  padding: 16px 16px 0;
+}
+
+.heading h2,
+.heading p,
+.name,
+.count,
+.save-error,
+.status p {
+  margin: 0;
+}
+
+.heading h2 {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 24px;
+}
+
+.heading p,
+.count {
+  margin-top: 4px;
+  color: #616161;
+  font-size: 13px;
+  line-height: 20px;
+}
+
+.save-error,
+.status p {
+  color: #212121;
+  font-size: 14px;
+  line-height: 22px;
+}
+
+.members {
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.member {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  border-top: 1px solid #eeeeee;
+}
+
+.avatar {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #1976d2;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.details {
+  min-width: 0;
+}
+
+.name {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 20px;
+}
+
+.email {
+  color: #0d47a1;
+  font-size: 13px;
+  line-height: 20px;
+  text-decoration: none;
+}
+
+.email:hover {
+  text-decoration: underline;
+}
+
+.assign,
+.retry {
+  padding: 8px 16px;
+  border: 0;
+  border-radius: 4px;
+  background: var(--mat-sys-primary);
+  color: #fff;
+  font-family: Inter, Tahoma, sans-serif;
+  font-size: 12.9px;
+  font-weight: 500;
+  line-height: 16px;
+  cursor: pointer;
+}
+
+.retry {
+  margin-top: 12px;
+}
+
+@container (max-width: 28rem) {
+  .member {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .assign {
+    grid-column: 2;
+    justify-self: start;
+  }
+}
+
+.assign:focus-visible,
+.retry:focus-visible,
+.email:focus-visible {
+  outline: 2px solid var(--mat-sys-primary);
+  outline-offset: 2px;
+}
+
+.member-enter {
+  animation: member-enter 240ms ease both;
+}
+
+.member:nth-child(2) {
+  animation-delay: 40ms;
+}
+
+.member:nth-child(3) {
+  animation-delay: 80ms;
+}
+
+.member:nth-child(4) {
+  animation-delay: 120ms;
+}
+
+@keyframes page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes member-enter {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}

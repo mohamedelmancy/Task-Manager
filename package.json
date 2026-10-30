@@ -13,8 +13,7 @@
     "lint": "ng lint",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "prepare": "husky",
-    "postinstall": "npm install --prefix tools && node tools/fix-chart-import.js"
+    "prepare": "husky"
   },
   "lint-staged": {
     "*.{ts,html}": [
@@ -46,10 +45,12 @@
     "@eslint/js": "^10.0.1",
     "@vitest/coverage-v8": "^4.1.12",
     "angular-eslint": "21.4.0",
+    "axe-core": "4.14.0",
     "eslint": "^10.3.0",
     "eslint-config-prettier": "^10.1.8",
     "husky": "^9.1.7",
     "jsdom": "^28.0.0",
+    "lighthouse": "13.6.0",
     "lint-staged": "^17.6.0",
     "prettier": "^3.8.1",
     "typescript": "~5.9.2",

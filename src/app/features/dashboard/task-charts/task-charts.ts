@@ -6,10 +6,11 @@ import {
   computed,
   effect,
   inject,
+  signal,
   untracked,
   viewChild,
 } from '@angular/core';
-import { ArcElement, Chart, DoughnutController, Tooltip } from './chart-js';
+import { ArcElement, Chart, DoughnutController, Tooltip } from 'chart.js';
 
 import { Apis } from '../../../core/api/apis';
 import { I18nService } from '../../../core/i18n/i18n.service';
@@ -54,13 +55,24 @@ export class TaskCharts {
   private statusChart: Chart | null = null;
   private priorityChart: Chart | null = null;
 
+  private readonly holdDone = signal(false);
+  protected readonly chartPlaceholders = [1, 2];
   protected readonly i18n = inject(I18nService);
   protected readonly statusSlices = computed(() => this.slices(this.statusCounts(), STATUS_SLICES));
   protected readonly prioritySlices = computed(() =>
     this.slices(this.priorityCounts(), PRIORITY_SLICES),
   );
 
+  /** Keeps the skeleton visible for one second, and longer when the tasks are still loading. */
   protected readonly loading = computed(() => {
+    if (this.taskApi.tasksStatus() === 'error') {
+      return false;
+    }
+
+    if (!this.holdDone()) {
+      return true;
+    }
+
     const status = this.taskApi.tasksStatus();
     const waiting = status === 'loading' || status === 'idle' || status === 'reloading';
     return waiting && this.taskApi.tasks().length === 0;
@@ -73,6 +85,8 @@ export class TaskCharts {
   );
 
   constructor() {
+    const timer = setTimeout(() => this.holdDone.set(true), 1000);
+    inject(DestroyRef).onDestroy(() => clearTimeout(timer));
     this.taskApi.loadTasks();
 
     effect(() => {
@@ -132,6 +146,10 @@ export class TaskCharts {
   }
 }
 
+/**
+ * Updates the chart already drawn on this canvas.
+ * A replaced canvas gets a new chart, and the previous one is destroyed.
+ */
 function drawChart(current: Chart | null, canvas: HTMLCanvasElement, slices: ChartSlice[]): Chart {
   const labels = slices.map((slice) => slice.label);
   const data = slices.map((slice) => slice.count);

@@ -1,0 +1,71 @@
+<section class="activity" aria-labelledby="activity-title">
+  <h2 id="activity-title">{{ i18n.t('activity.title') }}</h2>
+
+  @if (loading()) {
+    <div class="feed" aria-busy="true">
+      <p class="visually-hidden">{{ i18n.t('activity.loading') }}</p>
+      @for (placeholder of placeholders; track placeholder) {
+        <div class="skeleton"></div>
+      }
+    </div>
+  } @else if (failed()) {
+    <div class="status">
+      <p role="alert">{{ i18n.t('activity.error') }}</p>
+      <button type="button" class="retry" (click)="retry()">{{ i18n.t('stats.retry') }}</button>
+    </div>
+  } @else if (empty()) {
+    <p class="status">{{ i18n.t('activity.empty') }}</p>
+  } @else {
+    <ol class="feed">
+      @for (item of activities(); track item.id; let index = $index) {
+        <li class="item" [style.animation-delay]="index * 30 + 'ms'">
+          <button
+            type="button"
+            class="summary"
+            [attr.aria-expanded]="openId() === item.id"
+            (click)="toggle(item.id)"
+          >
+            <span class="task-title">{{ item.title }}</span>
+            <span class="meta">
+              <span
+                class="action"
+                [class.created]="item.action === 'created'"
+                [class.updated]="item.action === 'updated'"
+                [class.deleted]="item.action === 'deleted'"
+              >
+                {{ item.actionLabel }}
+              </span>
+              <time [attr.datetime]="item.at">{{ item.when }}</time>
+            </span>
+          </button>
+          <div
+            class="details"
+            [class.open]="openId() === item.id"
+            [attr.inert]="openId() === item.id ? null : ''"
+          >
+            <div class="details-body">
+              @if (item.changes.length === 0) {
+                <p>{{ i18n.t('activity.noDetails') }}</p>
+              } @else {
+                <ul>
+                  @for (change of item.changes; track change.field) {
+                    <li>
+                      <span class="field">{{ change.label }}</span>
+                      @if (change.before && change.after) {
+                        <span class="before">{{ change.before }}</span>
+                        <span>{{ i18n.t('activity.to') }}</span>
+                        <span class="after">{{ change.after }}</span>
+                      } @else {
+                        <span>{{ change.before || change.after }}</span>
+                      }
+                    </li>
+                  }
+                </ul>
+              }
+            </div>
+          </div>
+        </li>
+      }
+    </ol>
+  }
+</section>

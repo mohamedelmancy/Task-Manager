@@ -3,6 +3,7 @@ import { of, tap } from 'rxjs';
 
 const responses = new Map<string, HttpResponse<unknown>>();
 
+/** Replays a successful GET from memory. The stored response is cloned so callers cannot change it. */
 export const cacheGetInterceptor: HttpInterceptorFn = (request, next) => {
   if (request.method !== 'GET') {
     return next(request);

@@ -2,7 +2,11 @@
   <section class="cards" aria-busy="true" [attr.aria-label]="i18n.t('stats.region')">
     <p class="visually-hidden">{{ i18n.t('stats.loading') }}</p>
     @for (placeholder of placeholders; track placeholder) {
-      <article class="card skeleton"></article>
+      <article class="card skeleton" aria-hidden="true">
+        <span class="bar bar-title"></span>
+        <span class="bar bar-value"></span>
+        <span class="bar bar-note"></span>
+      </article>
     }
   </section>
 } @else if (failed()) {
@@ -32,3 +36,5 @@
     }
   </section>
 }
+
+<app-task-charts />
